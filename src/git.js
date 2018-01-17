@@ -16,11 +16,12 @@
     *
     * @constructor
     */
-   function Git (baseDir, ChildProcess, Buffer) {
+   function Git (baseDir, ChildProcess, Buffer, processOptions = {}) {
       this._baseDir = baseDir;
       this._runCache = [];
 
       this.ChildProcess = ChildProcess;
+      this.processOptions = processOptions;
       this.Buffer = Buffer;
    }
 
@@ -1336,7 +1337,8 @@ Please switch to using Git#exec to run arbitrary functions as part of the comman
          var stdErr = [];
          var spawned = git.ChildProcess.spawn(git._command, command.slice(0), {
             cwd: git._baseDir,
-            env: git._env
+            env: git._env,
+            ...(git.processOptions || {})
          });
 
          spawned.stdout.on('data', function (buffer) {
